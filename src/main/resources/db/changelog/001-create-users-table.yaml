@@ -1,0 +1,32 @@
+# src/main/resources/db/changelog/001-create-users-table.yaml
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-users-table
+      author: muss_coding
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password_hash
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+      rollback:
+        - dropTable:
+            tableName: users

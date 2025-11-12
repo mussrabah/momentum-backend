@@ -1,0 +1,29 @@
+# src/main/resources/application.yml
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: momentum-backend
+
+  # Datasource Configuration
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/momentum}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate # We use Liquibase to manage the schema, so we validate
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    open-in-view: false # Good practice to avoid performance issues
+
+  # Liquibase Configuration
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
