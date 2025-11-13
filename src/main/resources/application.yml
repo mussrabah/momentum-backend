@@ -27,3 +27,10 @@ spring:
   # Liquibase Configuration
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
+jwt:
+      # This MUST be a long, random, and secret string.
+      # Generate one from a site like: https://www.allkeysgenerator.com/Random/Security-Key-Generator
+      secret: ${JWT_SECRET:your-super-strong-secret-key-goes-here}
+      access-token-expiration-ms: 900000  # 15 minutes
+      refresh-token-expiration-ms: 604800000 # 7 days

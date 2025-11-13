@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-projects-table
+      author: muss_coding
+      changes:
+        - createTable:
+            tableName: projects
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: color
+                  type: VARCHAR(50)
+              - column:
+                  name: deadline
+                  type: "TIMESTAMP WITH TIME ZONE"
+              - column:
+                  name: owner_id # This is the foreign key column
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_projects_owner
+                    references: users(id) # It references the users table
+              - column:
+                  name: created_at
+                  type: "TIMESTAMP WITH TIME ZONE"
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: "TIMESTAMP WITH TIME ZONE"
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: projects

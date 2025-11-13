@@ -1,4 +1,9 @@
-# src/main/resources/db/changelog/db.changelog-master.yaml
 databaseChangeLog:
   - include:
       file: db/changelog/001-create-users-table.yaml
+  - include:
+      file: db/changelog/002-create-projects-table.yaml
+  - include:
+      file: db/changelog/003-create-tasks-table.yaml
+  - include:
+      file: db/changelog/004-create-pomodoro-sessions-table.yaml

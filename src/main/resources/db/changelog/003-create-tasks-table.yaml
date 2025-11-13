@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-tasks-table
+      author: muss_coding
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: pomodoro_estimate
+                  type: INT
+                  defaultValue: "1"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: "NOT_STARTED"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deadline
+                  type: "TIMESTAMP WITH TIME ZONE"
+              - column:
+                  name: project_id # This is the foreign key column
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_tasks_project
+                    references: projects(id) # It references the projects table
+              - column:
+                  name: created_at
+                  type: "TIMESTAMP WITH TIME ZONE"
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: "TIMESTAMP WITH TIME ZONE"
+                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: tasks
