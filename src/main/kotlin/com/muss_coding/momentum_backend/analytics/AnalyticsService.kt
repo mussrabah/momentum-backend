@@ -36,7 +36,7 @@ class AnalyticsServiceImpl(
         val sevenDaysAgo = now.minus(7, ChronoUnit.DAYS)
 
         // 1. Get total Pomodoros and calculate focused hours
-        val totalPomodoros = pomodoroRepository.countAllByOwnerIdAndType(user.id, "FOCUS")
+        val totalPomodoros = pomodoroRepository.countAllByOwnerIdAndType(user.id!!, "FOCUS")
         val totalHoursFocused = (totalPomodoros * POMODORO_DURATION_MINUTES) / 60.0
 
         // 2. Get total completed tasks

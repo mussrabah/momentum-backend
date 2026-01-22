@@ -6,45 +6,50 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.servlet.MockMvc
 import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
-import org.testcontainers.junit.jupiter.Testcontainers
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-@Testcontainers
+@AutoConfigureMockMvc // <--- 1. Enables MockMvc
+@ActiveProfiles("test")
 abstract class BaseIntegrationTest {
 
+    // 2. Inject MockMvc so subclasses can use it
     @Autowired
-    protected lateinit var mockMvc: MockMvc
+    lateinit var mockMvc: MockMvc
 
+    // 3. Inject ObjectMapper so subclasses can convert objects to JSON
     @Autowired
-    protected lateinit var objectMapper: ObjectMapper
+    lateinit var objectMapper: ObjectMapper
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
     @BeforeEach
+    fun setUp() {
+        clearDatabase()
+    }
+
     fun clearDatabase() {
-        // We execute raw SQL to truncate tables in the correct order
-        // to avoid foreign key constraint violations.
-        jdbcTemplate.execute("TRUNCATE TABLE pomodoro_sessions, tasks, projects, users CASCADE")
+        // Truncate tables to ensure a clean state for every test
+        jdbcTemplate.execute("TRUNCATE TABLE users, projects, tasks, pomodoro_sessions CASCADE")
     }
 
     companion object {
-        @Container
-        val postgres = PostgreSQLContainer("postgres:16-alpine")
-            .withDatabaseName("momentum_test")
-            .withUsername("test")
-            .withPassword("test")
+        // 4. Static Container (Singleton Pattern) to prevent "Port Mismatch" errors
+        private val postgres = PostgreSQLContainer("postgres:16-alpine").apply {
+            withDatabaseName("momentum_test")
+            withUsername("test")
+            withPassword("test")
+            start() // Start only once
+        }
 
         @JvmStatic
         @DynamicPropertySource
-        fun configureProperties(registry: DynamicPropertyRegistry) {
-            // Tell Spring Boot to use the Docker container's URL, User, and Pass
+        fun registerDBProperties(registry: DynamicPropertyRegistry) {
             registry.add("spring.datasource.url", postgres::getJdbcUrl)
             registry.add("spring.datasource.username", postgres::getUsername)
             registry.add("spring.datasource.password", postgres::getPassword)
