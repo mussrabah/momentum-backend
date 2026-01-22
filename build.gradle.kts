@@ -62,10 +62,6 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
     // Force the Docker client to use a newer API version compatible with your Docker Engine
     environment("DOCKER_API_VERSION", "1.44")
 }

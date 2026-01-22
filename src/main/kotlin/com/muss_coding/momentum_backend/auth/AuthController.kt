@@ -22,7 +22,12 @@ class AuthController(private val authService: AuthService) {
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthResponse> {
-        val authResponse = authService.login(request)
-        return ResponseEntity.ok(authResponse)
+        try {
+            val authResponse = authService.login(request)
+            return ResponseEntity.ok(authResponse)
+        } catch (e: IllegalStateException) {
+            println("Error: ${e.message}")
+            return ResponseEntity.status(403).build()
+        }
     }
 }

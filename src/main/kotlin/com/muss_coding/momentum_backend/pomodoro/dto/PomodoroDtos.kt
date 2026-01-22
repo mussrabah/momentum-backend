@@ -25,7 +25,7 @@ data class PomodoroSessionResponse(
 fun PomodoroSession.toPomodoroSessionResponse(): PomodoroSessionResponse {
     return PomodoroSessionResponse(
         id = this.id,
-        ownerId = this.owner.id,
+        ownerId = this.owner.id!!,
         taskId = this.task?.id,
         startedAt = this.startedAt,
         endedAt = this.endedAt,

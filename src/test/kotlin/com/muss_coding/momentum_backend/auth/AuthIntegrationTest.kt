@@ -63,6 +63,7 @@ class AuthIntegrationTest : BaseIntegrationTest() {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest))
         )
-            .andExpect(status().isInternalServerError) // Or 401/403 depending on how we handled exceptions
+            .andExpect(status().isForbidden)
+            //.andExpect(status().isInternalServerError) // Or 401/403 depending on how we handled exceptions
     }
 }
